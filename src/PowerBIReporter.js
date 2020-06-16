@@ -42,7 +42,8 @@ class PowerbiReporter {
 
     assertion(err, args) {
         if (err) {
-            this.testCollectionPassed = false
+            if (this.testCollectionPassed && !this.currItem.passed)
+                this.testCollectionPassed = false
             console.log(`Item: ${JSON.stringify(this.currItem)}`)
         }
     }
