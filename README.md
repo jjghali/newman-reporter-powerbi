@@ -1,4 +1,5 @@
 # newman-reporter-powerbi
+[![Known Vulnerabilities](https://snyk.io/test/github/jjghali/newman-reporter-powerbi/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jjghali/newman-reporter-powerbi?targetFile=package.json)
 
 ## Description
 Newman reporter for PowerBI
