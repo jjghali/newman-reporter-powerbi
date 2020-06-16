@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "c729094a-aa86-4346-b1b0-558a5131622f",
+		"name": "Test-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Random Chuck Norris joke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "227d3ece-d0b3-4e14-9899-5b8caec2ef77",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"       pm.response.to.be.ok;",
+							"        pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Body is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"       pm.response.to.be.ok;",
+							"        pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Body is json\", function () {",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.chucknorris.io/jokes/random",
+					"protocol": "https",
+					"host": [
+						"api",
+						"chucknorris",
+						"io"
+					],
+					"path": [
+						"jokes",
+						"random"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
