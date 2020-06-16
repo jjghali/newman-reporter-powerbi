@@ -1,6 +1,6 @@
 # newman-reporter-powerbi
 [![Known Vulnerabilities](https://snyk.io/test/github/jjghali/newman-reporter-powerbi/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jjghali/newman-reporter-powerbi?targetFile=package.json)
-
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjjghali%2Fnewman-reporter-powerbi.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjjghali%2Fnewman-reporter-powerbi?ref=badge_shield)
 ## Description
 Newman reporter for PowerBI
 
