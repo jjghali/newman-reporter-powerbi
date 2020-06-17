@@ -31,25 +31,36 @@ class PowerbiReporter {
     }
     beforeItem(err, args) {
         this.currItem = { name: this.itemName(args.item, args.cursor), passed: true, failedAssertions: [] };
+
         console.log(`[testStarted name='${this.currItem.name}' captureStandardOutput='true'`);
     }
 
     request(err, args) {
+        console.log(args)
         if (!err) {
-            this.currItem.response = args.response;
+            console.log(`Running ${args.item.name}`);
+            console.log(`Response time: ${args.response.responseTime}ms`)
+            console.log(`Response size: ${args.response.responseSize}B`)
         }
+        //     this.currItem.responseTime = args.response.responseTime;
+        //     this.currItem.responseSize = args.response.responseSize;
+        //     console.log(`Response time: ${this.currItem.responseTime}ms`)
+        //     console.log(`Response size: ${this.currItem.responseSize}B`)
+        // }
     }
 
     assertion(err, args) {
         if (err) {
-            if (this.testCollectionPassed && !this.currItem.passed)
+            if (this.testCollectionPassed && !this.currItem.passed) {
                 this.testCollectionPassed = false
+            }
             console.log(`Item: ${JSON.stringify(this.currItem)}`)
         }
     }
 
     done(err, args) {
         console.log("Tests finished. Now preparing results file for PowerBI")
+        // console.log(JSON.stringify(args))
         this.generateData()
     }
 
@@ -74,7 +85,6 @@ class PowerbiReporter {
 
     async sendData(data) {
         try {
-            console.log(this.apiURL)
             await axios({
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
