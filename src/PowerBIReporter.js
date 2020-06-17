@@ -36,7 +36,6 @@ class PowerbiReporter {
     }
 
     request(err, args) {
-        console.log(args)
         if (!err) {
             console.log(`Running ${args.item.name}`);
             console.log(`Response time: ${args.response.responseTime}ms`)
@@ -50,6 +49,7 @@ class PowerbiReporter {
     }
 
     assertion(err, args) {
+        console.log(JSON.stringify(args))
         if (err) {
             if (this.testCollectionPassed && !this.currItem.passed) {
                 this.testCollectionPassed = false
