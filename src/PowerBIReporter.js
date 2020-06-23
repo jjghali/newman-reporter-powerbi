@@ -15,6 +15,10 @@ class PowerbiReporter {
     constructor(emitter, reporterOptions, options) {
         this.currentDate = Date.now()
         this.options = options;
+        this.responseTimes = []
+        this.responseSizes = []
+        this.avgResponseTime = 0
+        this.avgResponseSize = 0
         this.component = reporterOptions.component
         this.product = reporterOptions.product
         this.environment = reporterOptions.environment
@@ -31,24 +35,44 @@ class PowerbiReporter {
     }
     beforeItem(err, args) {
         this.currItem = { name: this.itemName(args.item, args.cursor), passed: true, failedAssertions: [] };
+
         console.log(`[testStarted name='${this.currItem.name}' captureStandardOutput='true'`);
     }
 
+
     request(err, args) {
-        if (!err) {
-            this.currItem.response = args.response;
-        }
+        this.responseTimes.push(args.response.responseTime)
+        this.responseSizes.push(args.response.responseSize)
     }
+
+
 
     assertion(err, args) {
         if (err) {
-            this.testCollectionPassed = false
+            if (this.testCollectionPassed && !this.currItem.passed) {
+                this.testCollectionPassed = false
+            }
             console.log(`Item: ${JSON.stringify(this.currItem)}`)
         }
     }
 
     done(err, args) {
         console.log("Tests finished. Now preparing results file for PowerBI")
+        let sumResponseSize = 0;
+        let sumResponseTime = 0;
+
+        for (let i = 0; i < this.responseTimes.length; i++) {
+            const element = this.responseTimes[i];
+            sumResponseTime += element
+        }
+        for (let i = 0; i < this.responseSizes.length; i++) {
+            const element = this.responseSizes[i];
+            sumResponseSize += element
+        }
+
+        this.avgResponseTime = sumResponseTime / this.responseTimes.length
+        this.avgResponseSize = sumResponseSize / this.responseSizes.length
+
         this.generateData()
     }
 
@@ -63,6 +87,8 @@ class PowerbiReporter {
             component: this.appName,
             environment: this.env,
             duration,
+            avgResponseSize: this.avgResponseSize,
+            avgResponseTime: this.avgResponseTime,
             success: passed,
             date: currentDateISO,
             false: 0,
@@ -73,7 +99,6 @@ class PowerbiReporter {
 
     async sendData(data) {
         try {
-            console.log(this.apiURL)
             await axios({
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
