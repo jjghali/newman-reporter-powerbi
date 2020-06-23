@@ -15,6 +15,10 @@ class PowerbiReporter {
     constructor(emitter, reporterOptions, options) {
         this.currentDate = Date.now()
         this.options = options;
+        this.responseTimes = []
+        this.responseSizes = []
+        this.avgResponseTime = 0
+        this.avgResponseSize = 0
         this.component = reporterOptions.component
         this.product = reporterOptions.product
         this.environment = reporterOptions.environment
@@ -35,21 +39,15 @@ class PowerbiReporter {
         console.log(`[testStarted name='${this.currItem.name}' captureStandardOutput='true'`);
     }
 
+
     request(err, args) {
-        if (!err) {
-            console.log(`Running ${args.item.name}`);
-            console.log(`Response time: ${args.response.responseTime}ms`)
-            console.log(`Response size: ${args.response.responseSize}B`)
-        }
-        //     this.currItem.responseTime = args.response.responseTime;
-        //     this.currItem.responseSize = args.response.responseSize;
-        //     console.log(`Response time: ${this.currItem.responseTime}ms`)
-        //     console.log(`Response size: ${this.currItem.responseSize}B`)
-        // }
+        this.responseTimes.push(args.response.responseTime)
+        this.responseSizes.push(args.response.responseSize)
     }
 
+
+
     assertion(err, args) {
-        console.log(JSON.stringify(args))
         if (err) {
             if (this.testCollectionPassed && !this.currItem.passed) {
                 this.testCollectionPassed = false
@@ -60,7 +58,21 @@ class PowerbiReporter {
 
     done(err, args) {
         console.log("Tests finished. Now preparing results file for PowerBI")
-        // console.log(JSON.stringify(args))
+        let sumResponseSize = 0;
+        let sumResponseTime = 0;
+
+        for (let i = 0; i < this.responseTimes.length; i++) {
+            const element = this.responseTimes[i];
+            sumResponseTime += element
+        }
+        for (let i = 0; i < this.responseSizes.length; i++) {
+            const element = this.responseSizes[i];
+            sumResponseSize += element
+        }
+
+        this.avgResponseTime = sumResponseTime / this.responseTimes.length
+        this.avgResponseSize = sumResponseSize / this.responseSizes.length
+
         this.generateData()
     }
 
@@ -75,6 +87,8 @@ class PowerbiReporter {
             component: this.appName,
             environment: this.env,
             duration,
+            avgResponseSize: this.avgResponseSize,
+            avgResponseTime: this.avgResponseTime,
             success: passed,
             date: currentDateISO,
             false: 0,
