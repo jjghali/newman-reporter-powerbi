@@ -85,7 +85,7 @@ class PowerbiReporter {
         const data = [{
             product: this.product,
             component: this.component,
-            environment: this.env,
+            environment: this.environment,
             duration,
             avgResponseSize: this.avgResponseSize,
             avgResponseTime: this.avgResponseTime,
