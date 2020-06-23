@@ -84,7 +84,7 @@ class PowerbiReporter {
         let currentDateISO = dateObj.toISOString()
         const data = [{
             product: this.product,
-            component: this.appName,
+            component: this.component,
             environment: this.env,
             duration,
             avgResponseSize: this.avgResponseSize,
