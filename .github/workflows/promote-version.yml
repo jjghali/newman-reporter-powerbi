@@ -3,10 +3,6 @@
 
 name: Promote Version
 
-on:
-  push:
-    branch:
-      - '*.*.*'
 jobs:
   promote:
     name: Promoting to newer version
