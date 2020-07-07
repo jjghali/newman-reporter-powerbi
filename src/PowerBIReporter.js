@@ -22,7 +22,7 @@ class PowerbiReporter {
         this.component = reporterOptions.component
         this.product = reporterOptions.product
         this.environment = reporterOptions.environment
-        this.apiURL = reporterOptions.powerbiURL
+        this.apiURL = reporterOptions.powerbiURL + ""
         this.collectionName = options.collection.name
         this.testCollectionPassed = true
 
