@@ -12,20 +12,10 @@ jobs:
     name: Promoting to newer version
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm version $
-      - name: Setup GIT
-        run: |
-          git switch -c ${GITHUB_REF#refs/*/}
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config user.name "$GITHUB_ACTOR"
-      - name: Set Release version
-        run: |
-          cd ../
-          echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
-          npm version ${{ env.RELEASE_VERSION }}          
-          git commit -am "Upgrade package.json to ${{ env.RELEASE_VERSION }}"          
-          git push     
+      - uses: maks-stupak/gh-action-bump-version@v7.1.5
+      
   
