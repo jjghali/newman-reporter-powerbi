@@ -1,6 +1,6 @@
 'use strict'
 const axios = require('axios')
-
+const request = require('sync-request')
 class PowerbiReporter {
     /**
      * 
@@ -23,7 +23,7 @@ class PowerbiReporter {
         this.component = this.reporterOptions.component
         this.product = this.reporterOptions.product
         this.environment = this.reporterOptions.environment
-        this.apiURL = this.reporterOptions.powerbiURL + ""
+        this.apiURL = this.reporterOptions.url
         this.collectionName = options.collection.name
         this.testCollectionPassed = true
 
@@ -97,6 +97,18 @@ class PowerbiReporter {
         }]
         this.sendData(data)
     }
+
+    // sendData(data) {
+    //     try {
+    //         request('POST', this.apiURL, {
+    //             headers: { 'Content-Type': 'application/json' },
+    //             json: data
+    //         })
+    //     } catch (error) {
+    //         console.log(`URL: ${this.apiURL}`)
+    //         console.log(error)
+    //     }
+    // }
 
     async sendData(data) {
         try {
