@@ -15,14 +15,15 @@ class PowerbiReporter {
     constructor(emitter, reporterOptions, options) {
         this.currentDate = Date.now()
         this.options = options;
+        this.reporterOptions = reporterOptions;
         this.responseTimes = []
         this.responseSizes = []
         this.avgResponseTime = 0
         this.avgResponseSize = 0
-        this.component = reporterOptions.component
-        this.product = reporterOptions.product
-        this.environment = reporterOptions.environment
-        this.apiURL = reporterOptions.powerbiURL + ""
+        this.component = this.reporterOptions.component
+        this.product = this.reporterOptions.product
+        this.environment = this.reporterOptions.environment
+        this.apiURL = this.reporterOptions.powerbiURL + ""
         this.collectionName = options.collection.name
         this.testCollectionPassed = true
 
