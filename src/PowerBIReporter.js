@@ -106,6 +106,7 @@ class PowerbiReporter {
                 data
             })
         } catch (error) {
+            console.log(`URL: ${this.apiURL}`)
             console.log(error)
         }
     }
