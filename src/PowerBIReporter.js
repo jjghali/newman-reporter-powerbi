@@ -13,6 +13,7 @@ class PowerbiReporter {
      * @param {String=} reporterOptions.environment - Environment we which to test (QA, PROD, DEV)
      */
     constructor(emitter, reporterOptions, options) {
+        this.crashed = false
         this.currentDate = Date.now()
         this.options = options;
         this.reporterOptions = reporterOptions;
@@ -42,8 +43,15 @@ class PowerbiReporter {
 
 
     request(err, args) {
-        this.responseTimes.push(args.response.responseTime)
-        this.responseSizes.push(args.response.responseSize)
+        if (!args.response) {
+            this.crashed = true
+            console.error("Response invalid. Check if the tested API can be reached")
+        }
+        else {
+            this.responseTimes.push(args.response.responseTime)
+            this.responseSizes.push(args.response.responseSize)
+        }
+
     }
 
 
@@ -98,26 +106,15 @@ class PowerbiReporter {
         this.sendData(data)
     }
 
-    // sendData(data) {
-    //     try {
-    //         request('POST', this.apiURL, {
-    //             headers: { 'Content-Type': 'application/json' },
-    //             json: data
-    //         })
-    //     } catch (error) {
-    //         console.log(`URL: ${this.apiURL}`)
-    //         console.log(error)
-    //     }
-    // }
-
     async sendData(data) {
         try {
-            await axios({
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                url: this.apiURL,
-                data
-            })
+            if (!this.crashed)
+                await axios({
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/json' },
+                    url: this.apiURL,
+                    data
+                })
         } catch (error) {
             console.log(`URL: ${this.apiURL}`)
             console.log(error)
