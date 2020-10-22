@@ -33,19 +33,20 @@ class PowerbiReporter {
     }
 
     start(err, args) {
-        console.log(`Currently running ${this.collectionName}`);
+        console.log("Currently running",this.collectionName);
     }
+
     beforeItem(err, args) {
         this.currItem = { name: this.itemName(args.item, args.cursor), passed: true, failedAssertions: [] };
 
         console.log(`[testStarted name='${this.currItem.name}' captureStandardOutput='true'`);
     }
 
-
     request(err, args) {
         if (!args.response) {
-            this.crashed = true
-            console.error("Response invalid. Check if the tested API can be reached")
+            console.error("Response invalid. Check if the tested API can be reached. Response is null")
+            this.responseTimes = 0
+            this.responseSizes = 0
         }
         else {
             this.responseTimes.push(args.response.responseTime)
@@ -54,14 +55,11 @@ class PowerbiReporter {
 
     }
 
-
-
     assertion(err, args) {
+        console.error("Assertion Error", err)
         if (err) {
-            if (this.testCollectionPassed && !this.currItem.passed) {
-                this.testCollectionPassed = false
-            }
-            console.log(`Item: ${JSON.stringify(this.currItem)}`)
+            this.testCollectionPassed = false
+            console.log("Item",this.currItem)
         }
     }
 
@@ -107,17 +105,20 @@ class PowerbiReporter {
     }
 
     async sendData(data) {
-        try {
-            if (!this.crashed)
-                await axios({
-                    method: 'post',
-                    headers: { 'Content-Type': 'application/json' },
-                    url: this.apiURL,
-                    data
-                })
+        console.log("\r\nSending data via Axios to PowerBI URL", data, this.apiURL)
+        if(!this.apiURL) {
+            console.error("PowerBi URL is undefined...exit")
+            return
+        }
+        try {                
+            await axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                url: this.apiURL,
+                data
+            })
         } catch (error) {
-            console.log(`URL: ${this.apiURL}`)
-            console.log(error)
+            console.error(error)
         }
     }
 
