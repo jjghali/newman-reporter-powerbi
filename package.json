@@ -1,6 +1,6 @@
 {
   "name": "newman-reporter-powerbi",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Newman reporter for PowerBI",
   "main": "src/index.js",
   "scripts": {},
