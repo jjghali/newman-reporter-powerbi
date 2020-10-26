@@ -45,14 +45,13 @@ class PowerbiReporter {
     request(err, args) {
         if (!args.response) {
             console.error("Response invalid. Check if the tested API can be reached. Response is null")
-            this.responseTimes = 0
-            this.responseSizes = 0
+            this.responseTimes = []
+            this.responseSizes = []
         }
         else {
             this.responseTimes.push(args.response.responseTime)
             this.responseSizes.push(args.response.responseSize)
         }
-
     }
 
     assertion(err, args) {
@@ -67,18 +66,18 @@ class PowerbiReporter {
         console.log("Tests finished. Now preparing results file for PowerBI")
         let sumResponseSize = 0;
         let sumResponseTime = 0;
-
-        for (let i = 0; i < this.responseTimes.length; i++) {
-            const element = this.responseTimes[i];
-            sumResponseTime += element
-        }
-        for (let i = 0; i < this.responseSizes.length; i++) {
-            const element = this.responseSizes[i];
-            sumResponseSize += element
-        }
-
-        this.avgResponseTime = sumResponseTime / this.responseTimes.length
-        this.avgResponseSize = sumResponseSize / this.responseSizes.length
+        if(this.responseTimes.length > 0) {
+            for (let i = 0; i < this.responseTimes.length; i++) {
+                const element = this.responseTimes[i];
+                sumResponseTime += element
+            }
+            for (let i = 0; i < this.responseSizes.length; i++) {
+                const element = this.responseSizes[i];
+                sumResponseSize += element
+            }
+            this.avgResponseTime = sumResponseTime / this.responseTimes.length
+            this.avgResponseSize = sumResponseSize / this.responseSizes.length
+        }          
 
         this.generateData()
     }
@@ -111,12 +110,18 @@ class PowerbiReporter {
             return
         }
         try {                
-            await axios({
+            const resp = await axios({
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
                 url: this.apiURL,
                 data
             })
+            console.log(`Status code: ${resp.status}`);
+            console.log(`Status text: ${resp.statusText}`);
+            console.log(`Request method: ${resp.request.method}`);
+            console.log(`Path: ${resp.request.path}`);        
+            console.log(`Date: ${resp.headers.date}`);
+
         } catch (error) {
             console.error(error)
         }
