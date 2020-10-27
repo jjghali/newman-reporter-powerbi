@@ -83,11 +83,12 @@ class PowerbiReporter {
     }
 
     generateData() {
-        let passed = this.testCollectionPassed ? 1 : 0
+        let passed = this.testCollectionPassed ? true : false
         let endDate = Date.now()
         let duration = Math.abs((endDate - this.currentDate) / 1000)
         let dateObj = new Date(this.currentDate)
         let currentDateISO = dateObj.toISOString()
+
         const data = [{
             product: this.product,
             component: this.component,
@@ -100,6 +101,7 @@ class PowerbiReporter {
             false: 0,
             true: 1
         }]
+        
         this.sendData(data)
     }
 
@@ -123,7 +125,7 @@ class PowerbiReporter {
             console.log(`Date: ${resp.headers.date}`);
 
         } catch (error) {
-            console.error(error)
+            console.log("Failed to send status", error.response)
         }
     }
 
